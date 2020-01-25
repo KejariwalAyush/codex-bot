@@ -3,7 +3,10 @@ import requests
 import time
 import urllib
 
+# import config
 
+
+# TOKEN = config.token
 TOKEN = "830873928:AAE5u4XF95Lc0LwKRV0HFYMcvM5Jty3ITMA"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
@@ -51,7 +54,7 @@ def get_last_chat_id_and_text(updates):
 
 
 def send_message(text, chat_id):
-    text = urllib.parse.quote_plus(text)        # this allows you to enter special characters
+    text = urllib.parse.quote_plus(text)
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
