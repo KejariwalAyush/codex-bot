@@ -48,15 +48,31 @@ def send_message(text, chat_id):
     url = MAIN_URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
-while True:
+# while True:
+#     jsf = get_updates(url)
+#     update = jsf['result']
+#     last_update = get_last_updateid(update)
+#     update = get_updates(last_update)
+#     msg, chatid = get_last_chat_id_and_text(update)
+#     print (msg)
+#     send_message(msg, chatid)
+
+def main():
     jsf = get_updates(url)
     update = jsf['result']
-    last_update = get_last_updateid(update)
-    update = get_updates(last_update)
-    msg, chatid = get_last_chat_id_and_text(update)
-    print (msg)
-    send_message(msg, chatid)
+    last_update = None
+    while True:
+        update = get_updates(last_update)
+        if len(update["result"]) > 0:
+            last_update_id = get_last_updateid(update) + 1
+            msg, chatid = get_last_chat_id_and_text(update)
+            print (msg)
+            send_message(msg, chatid)
+        time.sleep(0.5)
 
+
+if __name__ == '__main__':
+    main()
 
 # print (url)
 # update = js.update_id()

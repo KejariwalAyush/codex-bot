@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "result": [
+    {
+      "update_id": 94189501,
+      "message": {
+        "message_id": 172,
+        "from": {
+          "id": 748751883,
+          "is_bot": false,
+          "first_name": "Ayush",
+          "last_name": "Kejariwal",
+          "username": "a_kejriwal",
+          "language_code": "en"
+        },
+        "chat": {
+          "id": -273210582,
+          "title": "testbot",
+          "type": "group",
+          "all_members_are_administrators": true
+        },
+        "date": 1580234972,
+        "text": "/hello",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 6,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 94189502,
+      "message": {
+        "message_id": 173,
+        "from": {
+          "id": 644669449,
+          "is_bot": false,
+          "first_name": "Kej",
+          "username": "a_kejariwal"
+        },
+        "chat": {
+          "id": -273210582,
+          "title": "testbot",
+          "type": "group",
+          "all_members_are_administrators": true
+        },
+        "date": 1580235001,
+        "text": "/hello",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 6,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 94189503,
+      "message": {
+        "message_id": 174,
+        "from": {
+          "id": 748751883,
+          "is_bot": false,
+          "first_name": "Ayush",
+          "last_name": "Kejariwal",
+          "username": "a_kejriwal",
+          "language_code": "en"
+        },
+        "chat": {
+          "id": -273210582,
+          "title": "testbot",
+          "type": "group",
+          "all_members_are_administrators": true
+        },
+        "date": 1580235021,
+        "text": "/hi",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 3,
+            "type": "bot_command"
+          }
+        ]
+      }
+    }
+  ]
+}

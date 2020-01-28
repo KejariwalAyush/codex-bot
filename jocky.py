@@ -2,9 +2,11 @@ import json
 import requests
 import time
 import urllib
+from settings import RULES, BOT_INTRO
 
-
-TOKEN = "830873928:AAE5u4XF95Lc0LwKRV0HFYMcvM5Jty3ITMA"
+f_open = open('token.txt','r')
+TOKEN = f_open.read()
+print (TOKEN)
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 
@@ -39,7 +41,17 @@ def echo_all(updates):
     for update in updates["result"]:
         text = update["message"]["text"]
         chat = update["message"]["chat"]["id"]
-        send_message(text, chat)
+        user_id = update["message"]["from"]["id"]
+        msg_id = update["message"]["message_id"]
+        reply = "wrong entry"
+        if (text == "/hello"):
+            reply = "hi"
+        if (text == "/help"):
+            reply = RULES
+            chat = user_id
+        # if (text == "/remove"):
+            
+        send_message(reply, chat)
 
 
 def get_last_chat_id_and_text(updates):
@@ -51,6 +63,8 @@ def get_last_chat_id_and_text(updates):
 
 
 def send_message(text, chat_id):
+    # print (chat_id)
+    # print (text)
     text = urllib.parse.quote_plus(text)        # this allows you to enter special characters
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
