@@ -39,6 +39,9 @@ def get_last_update_id(updates):
 
 def echo_all(updates):
     for update in updates["result"]:
+        user_id = update["message"]["from"]["id"]
+        msg_id = update["message"]["message_id"]
+        username = update["message"]["from"]["username"]
         group_title = None
         text = None
         new_member = None
@@ -50,9 +53,11 @@ def echo_all(updates):
             if (i == "text"):
                 text = update["message"]["text"]
             if (i == "chat"):
-                if (update["message"]["chat"]["type"] == "supergroup" ): #| update["message"]["chat"]["type"] == "supergroup"):
-                    group_title = update["message"]["chat"]["title"]
                 chat_id = update["message"]["chat"]["id"]
+                if (update["message"]["chat"]["type"] == "supergroup" ): 
+                    group_title = update["message"]["chat"]["title"]
+                    is_admin = get_admins(chat_id,user_id)    #it is a boolean which tells you if person is admin or not
+                # if (update["message"]["chat"]["type"] == "private"):
             if (i == "reply_to_message"):
                 rep_msg_id = update["message"]["reply_to_message"]["message_id"]
                 rep_chat_id = update["message"]["reply_to_message"]["chat"]["id"]
@@ -62,35 +67,46 @@ def echo_all(updates):
                 new_member = update["message"]["new_chat_member"]
             elif (i == "new_chat_members"):
                 new_member = update["message"]["new_chat_member"]
-        user_id = update["message"]["from"]["id"]
-        msg_id = update["message"]["message_id"]
-        username = update["message"]["from"]["username"]
+        
         # reply = "wrong entry"
-        if (text == "/hello"):
+        if (text == "/hello" or text == "/hello@Jockybot"):
             reply = "Hi @" + username
             send_message(reply, chat_id)
-        elif (text == "/start"):
+        elif (text == "/start" and update["message"]["chat"]["type"] == "private"):
             reply = BOT_INTRO
             chat_id = user_id
             send_message(reply, chat_id)
-        elif (text == "/rules"):
+        elif (text == "/rules" or text == "/rules@Jockybot"):
             reply = RULES
             chat_id = user_id
             send_message(reply, chat_id)
         elif (new_member != None):
             reply = "Welcome "+new_member["first_name"]+" to "+group_title
             send_message(reply,chat_id)
-        elif (text == "/delete"):
-            if (rep_msg_id != None):
+        elif (text == "/delete" or text == "/delete@Jockybot"):
+            if (rep_msg_id != None and is_admin):
                 delete_message(rep_chat_id,rep_msg_id)            
                 delete_message(chat_id,msg_id)
+            if(is_admin == False):
+                reply = "this command can be executed by admins only"
+                send_message(reply,chat_id)
+        elif (text == "/pin" or text == "/pin@Jockybot"):
+            if (is_admin):
+                pin_chat(chat_id,rep_msg_id)
             else:
-                delete_message(chat_id,msg_id)
-        elif (text.split(" ")[0] == "/kick"):
-            print ("kicking")
-            x = text.split(" ")
-            kick_user(chat_id,x[1])     #is not working
-            send_message("kicked "+x[1],chat_id)
+                reply = "this command can be executed by admins only"
+                send_message(reply,chat_id)
+        elif (text == "/unpin" or text == "/unpin@Jockybot"):
+            if (is_admin):
+                unpin_chat(chat_id)
+            else:
+                reply = "this command can be executed by admins only"
+                send_message(reply,chat_id)
+        # elif (text.split(" ")[0] == "/kick"):
+        #     print ("kicking")
+        #     x = text.split(" ")
+        #     kick_user(chat_id,x[1])     #is not working
+        #     send_message("kicked "+x[1],chat_id)
             
 
 
@@ -116,6 +132,30 @@ def delete_message(chat_id,message_id):
 def kick_user(chat_id,user_id):
     url = URL + "kickChatMember?chat_id={}&user_id={}".format(chat_id,user_id)
     get_url(url)
+
+def pin_chat(chat_id,message_id):
+    url = URL + "pinChatMessage?chat_id={}&message_id={}&disable_notification=False".format(chat_id,message_id)
+    get_url(url)
+
+def unpin_chat(chat_id):
+    url = URL + "unpinChatMessage?chat_id={}".format(chat_id)
+    get_url(url)
+
+def get_admins(chat_id,user_id):
+    url = URL + "getChatAdministrators?chat_id={}".format(chat_id)
+    adm = get_json_from_url(url)
+    # print (adm)
+    admins = []
+    for i in adm["result"]:
+        admins.append(i["user"]["id"])
+        if(i["user"]["id"]== user_id):
+            is_admin = True
+        else:
+            is_admin = False
+        # print (i["user"]["id"])
+    # print (is_admin)
+    return is_admin
+
 
 def main():
     last_update_id = None
